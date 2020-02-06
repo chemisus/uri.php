@@ -87,10 +87,11 @@ class URITest extends TestCase
      * @dataProvider dataProvider
      * @param string $string
      * @param array $parts
+     * @throws InvalidURIException
      */
     public function testSets(string $string, array $parts)
     {
-        $uri = new BaseURI();
+        $uri = uri();
         array_key_exists('scheme', $parts) ? $uri->setScheme($parts['scheme']) : null;
         array_key_exists('user', $parts) ? $uri->setUser($parts['user']) : null;
         array_key_exists('pass', $parts) ? $uri->setPass($parts['pass']) : null;
@@ -180,6 +181,14 @@ class URITest extends TestCase
         array_key_exists('query', $parts) ? $uri->setQuery($parts['query']) : null;
         array_key_exists('fragment', $parts) ? $uri->setFragment($parts['fragment']) : null;
         $this->verify($uri, $string, $parts);
+    }
+
+    /**
+     * @throws InvalidURIException
+     */
+    public function testNull()
+    {
+        $this->assertNull(uri(""));
     }
 
 }

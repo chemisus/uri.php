@@ -14,28 +14,25 @@ function postfix($string, $postfix = "")
 
 /**
  * @param mixed $uri
- * @param mixed|null $child
- * @return BaseURI|ChildURI|MutableChildURI|URI|null
+ * @return URI
  * @throws InvalidURIException
  */
-function uri($uri = [], $child = null)
+function uri($uri = [])
 {
-    if ($uri === null) {
+    if (is_array($uri)) {
+        $uri = URI::FromParts($uri);
+    }
+
+    if (!$uri) {
         return null;
     }
 
-    $child = uri($child);
-
     if (is_string($uri)) {
-        $uri = BaseURI::FromString($uri);
-    }
-
-    if (is_array($uri)) {
-        $uri = BaseURI::FromParts($uri);
+        $uri = URI::FromString($uri);
     }
 
     if ($uri instanceof URI) {
-        return $child ? ($child instanceof MutableURI ? new MutableChildURI($uri, $child) : new ChildURI($uri, $child)) : $uri;
+        return $uri;
     }
 
     throw new InvalidURIException("invalid uri");
