@@ -1,5 +1,6 @@
 {
   "name": "chemisus/uri",
+  "version": "0.1",
   "autoload": {
     "files": [
       "src/functions.php"

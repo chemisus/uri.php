@@ -37,18 +37,3 @@ function uri($uri = [])
 
     throw new InvalidURIException("invalid uri");
 }
-
-function uri_authority(URI $uri)
-{
-    return postfix($uri->user(), wrap(':', $uri->pass()) . '@') . $uri->host() . wrap(':', $uri->port());
-}
-
-function uri_string(URI $uri)
-{
-    $scheme = postfix($uri->scheme(), ":");
-    $authority = wrap('//', uri_authority($uri));
-    $path = $uri->path();
-    $query = wrap('?', $uri->query());
-    $fragment = wrap('#', $uri->fragment());
-    return implode('', [$scheme, $authority, $path, $query, $fragment]);
-}

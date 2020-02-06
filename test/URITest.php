@@ -87,26 +87,6 @@ class URITest extends TestCase
      * @dataProvider dataProvider
      * @param string $string
      * @param array $parts
-     * @throws InvalidURIException
-     */
-    public function testSets(string $string, array $parts)
-    {
-        $uri = uri();
-        array_key_exists('scheme', $parts) ? $uri->setScheme($parts['scheme']) : null;
-        array_key_exists('user', $parts) ? $uri->setUser($parts['user']) : null;
-        array_key_exists('pass', $parts) ? $uri->setPass($parts['pass']) : null;
-        array_key_exists('host', $parts) ? $uri->setHost($parts['host']) : null;
-        array_key_exists('port', $parts) ? $uri->setPort($parts['port']) : null;
-        array_key_exists('path', $parts) ? $uri->setPath($parts['path']) : null;
-        array_key_exists('query', $parts) ? $uri->setQuery($parts['query']) : null;
-        array_key_exists('fragment', $parts) ? $uri->setFragment($parts['fragment']) : null;
-        $this->verify($uri, $string, $parts);
-    }
-
-    /**
-     * @dataProvider dataProvider
-     * @param string $string
-     * @param array $parts
      * @param string|null $authority
      * @throws InvalidURIException
      */
@@ -160,27 +140,6 @@ class URITest extends TestCase
         $uri = uri($parts)->with([]);
         $this->verify($uri, $string, $parts);
         $this->assertEquals($authority, $uri->authority());
-    }
-
-
-    /**
-     * @dataProvider dataProvider
-     * @param string $string
-     * @param array $parts
-     * @throws InvalidURIException
-     */
-    public function testSetRelative(string $string, array $parts)
-    {
-        $uri = uri()->with()->with();
-        array_key_exists('scheme', $parts) ? $uri->setScheme($parts['scheme']) : null;
-        array_key_exists('user', $parts) ? $uri->setUser($parts['user']) : null;
-        array_key_exists('pass', $parts) ? $uri->setPass($parts['pass']) : null;
-        array_key_exists('host', $parts) ? $uri->setHost($parts['host']) : null;
-        array_key_exists('port', $parts) ? $uri->setPort($parts['port']) : null;
-        array_key_exists('path', $parts) ? $uri->setPath($parts['path']) : null;
-        array_key_exists('query', $parts) ? $uri->setQuery($parts['query']) : null;
-        array_key_exists('fragment', $parts) ? $uri->setFragment($parts['fragment']) : null;
-        $this->verify($uri, $string, $parts);
     }
 
     /**

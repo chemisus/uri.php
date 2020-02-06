@@ -53,17 +53,56 @@ class URI
         return self::FromParts($parts);
     }
 
+    /**
+     * @var string
+     */
     private $scheme;
+
+    /**
+     * @var string
+     */
     private $user;
+
+    /**
+     * @var string
+     */
     private $pass;
+
+    /**
+     * @var string
+     */
     private $host;
+
+    /**
+     * @var string
+     */
     private $port;
+
+    /**
+     * @var string
+     */
     private $path;
+
+    /**
+     * @var string
+     */
     private $query;
+
+    /**
+     * @var string
+     */
     private $fragment;
 
-    public function __construct(?string $scheme = null, ?string $user = null, ?string $pass = null, ?string $host = null, ?string $port = null, ?string $path = null, ?string $query = null, ?string $fragment = null)
-    {
+    public function __construct(
+        string $scheme = null,
+        string $user = null,
+        string $pass = null,
+        string $host = null,
+        string $port = null,
+        string $path = null,
+        string $query = null,
+        string $fragment = null
+    ) {
         $this->scheme = $scheme;
         $this->user = $user;
         $this->pass = $pass;
@@ -74,6 +113,22 @@ class URI
         $this->fragment = $fragment;
     }
 
+    /**
+     * @param array $parts
+     * @return URI
+     */
+    public function with(array $parts = [])
+    {
+        return self::FromParts(array_merge($this->parts(), $parts));
+    }
+
+    /**
+     * Returns an array containing the URI components and their values.
+     *
+     * Any null components will be removed.
+     *
+     * @return array
+     */
     public function parts(): array
     {
         return array_filter([
@@ -88,116 +143,122 @@ class URI
         ]);
     }
 
+    /**
+     * Returns the URI in string format.
+     *
+     * URI pattern: [scheme:][//[user[:pass]@]host[:port]][path][?query][#fragment]
+     *
+     * @return string
+     */
     public function toString(): string
     {
-        return uri_string($this);
+        $scheme = postfix($this->scheme(), ":");
+        $authority = wrap('//', $this->authority());
+        $path = ltrim($this->path(), '/');
+        $query = wrap('?', $this->query());
+        $fragment = wrap('#', $this->fragment());
+        return $scheme . implode('/', array_filter([$authority, $path])) . $query . $fragment;
     }
 
+    /**
+     * Returns the URI authority.
+     *
+     * Authority pattern: [user[:pass]@]host[:port]
+     *
+     * @return string|null
+     */
     public function authority(): ?string
     {
-        return uri_authority($this);
+        return postfix($this->user(), wrap(':', $this->pass()) . '@') . $this->host() . wrap(':', $this->port());
     }
 
+    /**
+     * Returns the URI scheme.
+     *
+     * @return string|null
+     */
     public function scheme(): ?string
     {
         return $this->scheme;
     }
 
-    public function setScheme(?string $scheme): URI
-    {
-        $this->scheme = $scheme;
-        return $this;
-    }
-
+    /**
+     * Returns the URI user.
+     *
+     * @return string|null
+     */
     public function user(): ?string
     {
         return $this->user;
     }
 
-    public function setUser(?string $user): URI
-    {
-        $this->user = $user;
-        return $this;
-    }
-
+    /**
+     * Returns the URI pass.
+     *
+     * @return string|null
+     */
     public function pass(): ?string
     {
         return $this->pass;
     }
 
-    public function setPass(?string $pass): URI
-    {
-        $this->pass = $pass;
-        return $this;
-    }
-
+    /**
+     * Returns the URI host.
+     *
+     * @return string|null
+     */
     public function host(): ?string
     {
         return $this->host;
     }
 
-    public function setHost(?string $host): URI
-    {
-        $this->host = $host;
-        return $this;
-    }
-
+    /**
+     * Returns the URI port.
+     *
+     * @return string|null
+     */
     public function port(): ?string
     {
         return $this->port;
     }
 
-    public function setPort(?string $port): URI
-    {
-        $this->port = $port;
-        return $this;
-    }
-
+    /**
+     * Returns the URI path.
+     *
+     * @return string|null
+     */
     public function path(): ?string
     {
         return $this->path;
     }
 
-    public function setPath(?string $path): URI
-    {
-        $this->path = $path;
-        return $this;
-    }
-
+    /**
+     * Returns the URI query.
+     *
+     * @return string|null
+     */
     public function query(): ?string
     {
         return $this->query;
     }
 
-    public function setQuery(?string $query): URI
-    {
-        $this->query = $query;
-        return $this;
-    }
-
+    /**
+     * Returns the URI fragment.
+     *
+     * @return string|null
+     */
     public function fragment(): ?string
     {
         return $this->fragment;
     }
 
-    public function setFragment(?string $fragment): URI
-    {
-        $this->fragment = $fragment;
-        return $this;
-    }
-
+    /**
+     * Returns the URI in string format.
+     *
+     * @return string
+     */
     public function __toString(): string
     {
         return $this->toString();
-    }
-
-    /**
-     * @param array $parts
-     * @return URI
-     * @throws InvalidURIException
-     */
-    public function with(array $parts = [])
-    {
-        return uri(array_merge($this->parts(), $parts));
     }
 }
